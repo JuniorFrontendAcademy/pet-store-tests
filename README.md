@@ -23,6 +23,14 @@ Runs the `prettier` formatter to format the code
 
 Runs the `prettier` formatter to check if the code is formatted
 
+### `lint`
+
+Runs the ESLint linter
+
+### `lint:fix`
+
+Runs the ESLint with `--fix` argument to automatically fix fixable code
+
 ### `build-tests`
 
 Builds the tests from TypeScript to JavaScript
