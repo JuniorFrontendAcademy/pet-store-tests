@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "skipLibCheck": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "pretty": true,
+
+    "baseUrl": "./",
+    "outDir": "./tests-out"
+  },
+  "include": ["src", "playwright.config.ts"],
+  "exclude": ["./node_modules/*"]
+}

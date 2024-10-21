@@ -1,0 +1,7 @@
+.idea
+.vscode
+test-results
+playwright-report
+playwright
+tests-out
+mock-app
