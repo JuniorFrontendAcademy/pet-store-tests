@@ -1,10 +1,9 @@
 {
-  "name": "playwright-workshop",
+  "name": "pet-store-tests",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build-fe": "cd ./mock-app && npx vite build --outDir=dist-e2e",
     "typecheck": "tsc --noEmit",
     "format": "prettier --cache --write .",
     "format-check": "prettier --cache --check .",
@@ -12,35 +11,35 @@
     "lint:fix": "npm run lint -- --fix",
     "build-tests": "rimraf ./tests-out && tsc",
     "test": "run-script-os",
-    "test:windows": "npm run build-fe && npm run build-tests && playwright test --project=chrome --project=firefox --project=edge -c ./tests-out",
-    "test:macos": "npm run build-fe && npm run build-tests && playwright test --project=chrome --project=firefox --project=webkit -c ./tests-out",
-    "test:linux": "npm run build-fe && npm run build-tests && playwright test --project=chrome --project=firefox -c ./tests-out",
+    "test:windows": "npm run build-tests && playwright test --project=chrome --project=firefox --project=edge -c ./tests-out",
+    "test:macos": "npm run build-tests && playwright test --project=chrome --project=firefox --project=webkit -c ./tests-out",
+    "test:linux": "npm run build-tests && playwright test --project=chrome --project=firefox -c ./tests-out",
     "test:default": "echo \"Error: Platform not supported\" & exit 1",
     "install-browsers": "run-script-os",
     "install-browsers:windows": "playwright install --with-deps chrome & playwright install --with-deps firefox & playwright install --with-deps msedge & playwright install ffmpeg",
     "install-browsers:macos": "playwright install --with-deps chrome; playwright install --with-deps firefox; playwright install --with-deps webkit; playwright install ffmpeg",
     "install-browsers:linux": "playwright install --with-deps chrome; playwright install --with-deps firefox; playwright install ffmpeg",
     "install-browsers:default": "echo \"Error: Platform not supported\" & exit 1",
-    "test:debug": "npm run build-fe && npm run build-tests && playwright test --debug --project=chrome -c ./tests-out",
-    "test:strict": "npm run build-fe && npm run build-tests && playwright test --project=chrome -c ./tests-out --retries=0 --trace=on",
+    "test:debug": "npm run build-tests && playwright test --debug --project=chrome -c ./tests-out",
+    "test:strict": "npm run build-tests && playwright test --project=chrome -c ./tests-out --retries=0 --trace=on",
     "test:watch": "concurrently --kill-others \"rimraf ./tests-out && tsc -w\" \"cross-env PWTEST_WATCH=1 npm run test\"",
-    "test-report": "playwright show-report --host=0.0.0.0"
+    "show-report": "playwright show-report --host=0.0.0.0"
   },
   "dependencies": {
-    "@playwright/test": "^1.48.1"
+    "@playwright/test": "^1.48.2"
   },
   "devDependencies": {
     "@arabasta/eslint-config": "^1.0.5",
     "@total-typescript/ts-reset": "^0.6.1",
-    "@types/node": "^22.7.7",
+    "@types/node": "^22.8.1",
     "concurrently": "^9.0.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
-    "eslint-plugin-playwright": "^1.8.1",
+    "eslint-plugin-playwright": "^2.0.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
     "run-script-os": "^1.1.6",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.10.0"
+    "typescript-eslint": "^8.11.0"
   }
 }
