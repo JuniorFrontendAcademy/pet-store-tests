@@ -21,7 +21,7 @@
     "install-browsers:linux": "playwright install --with-deps chrome; playwright install --with-deps firefox; playwright install ffmpeg",
     "install-browsers:default": "echo \"Error: Platform not supported\" & exit 1",
     "test:debug": "npm run build-tests && playwright test --debug --project=chrome -c ./tests-out",
-    "test:strict": "npm run build-tests && playwright test --project=chrome -c ./tests-out --retries=0 --trace=on",
+    "test:strict": "npm run build-tests && playwright test --project=chrome -c ./tests-out --retries=0 --timeout=5000 --trace=on",
     "test:watch": "concurrently --kill-others \"rimraf ./tests-out && tsc -w\" \"cross-env PWTEST_WATCH=1 npm run test\"",
     "show-report": "playwright show-report --host=0.0.0.0"
   },
