@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { defineConfig, devices } from '@playwright/test';
 
 // This should be no less than the minimal viewport
@@ -9,7 +11,7 @@ const VIEWPORT = { width: 1300, height: 900 };
 export default defineConfig({
   testDir: './src/tests',
   fullyParallel: true,
-  workers: 6,
+  workers: Number(process.env.PW_WORKERS) || 6,
   reporter: [['html', { open: 'never' }]],
   use: {
     trace: 'on-first-retry',

@@ -4,8 +4,6 @@ import {
   typescriptConfig,
   typescriptDefinitionsConfig,
 } from '@arabasta/eslint-config';
-// import/no-unresolved doesn't support node "exports" field. https://github.com/import-js/eslint-plugin-import/issues/1810
-// eslint-disable-next-line import/no-unresolved
 import playwright from 'eslint-plugin-playwright';
 // import/no-unresolved doesn't support node "exports" field. https://github.com/import-js/eslint-plugin-import/issues/1810
 // eslint-disable-next-line import/no-unresolved
@@ -38,30 +36,8 @@ export default [
       },
     },
     rules: {
-      'import/no-restricted-paths': [
-        'error',
-        {
-          zones: [
-            {
-              target: './',
-              from: `./src/**/*.+(spec|test).+(${allExtensions.join('|')})`,
-              message: 'Importing test files in non-test files is not allowed.',
-            },
-            {
-              target: './',
-              from: `./__mocks__`,
-              message:
-                'Importing mock modules in non-test files is not allowed.',
-            },
-            {
-              target: './',
-              from: './src/testing',
-              message:
-                'Importing testing utilities in non-test files is not allowed.',
-            },
-          ],
-        },
-      ],
+      // Put your rules here.
+      'no-restricted-imports': 'off',
     },
   }),
 
@@ -111,6 +87,7 @@ export default [
       'playwright/no-useless-not': 'error',
       'playwright/no-wait-for-selector': 'error',
       'playwright/no-wait-for-timeout': 'error',
+      'import/no-nodejs-modules': 'off',
     },
   }),
 

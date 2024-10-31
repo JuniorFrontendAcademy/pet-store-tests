@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-import { WaitHandle } from './testing/utils.js';
+import { useServer } from '../testing/useServer.js';
+import { WaitHandle } from '../testing/utils.js';
 
-test.use({ baseURL: 'http://localhost:6344' });
+const serverInfo = useServer();
 
 test.describe('landing page', () => {
   test('shows app heading', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     await expect(
       page.getByRole('heading', { name: 'Pet Store' })
@@ -18,12 +19,12 @@ test.describe('landing page', () => {
   }) => {
     const waitHandle = new WaitHandle();
 
-    await page.route(`/api/pet/kinds`, async (route) => {
+    await page.route(`${serverInfo.baseURL}/api/pet/kinds`, async (route) => {
       await waitHandle.wait();
       await route.fallback();
     });
 
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     await expect(page.getByRole('button', { name: 'Add Pet' })).toBeDisabled();
 
@@ -38,12 +39,12 @@ test.describe('landing page', () => {
   test('displays a list of pets', async ({ page }) => {
     const waitHandle = new WaitHandle();
 
-    await page.route(`/api/pet/kinds`, async (route) => {
+    await page.route(`${serverInfo.baseURL}/api/pet/kinds`, async (route) => {
       await waitHandle.wait();
       await route.fallback();
     });
 
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const loadingIndicator = page.getByTestId('loading-indicator');
     await expect(loadingIndicator).toBeVisible();
@@ -60,12 +61,12 @@ test.describe('landing page', () => {
   }) => {
     const waitHandle = new WaitHandle();
 
-    await page.route(`/api/pet/all`, async (route) => {
+    await page.route(`${serverInfo.baseURL}/api/pet/all`, async (route) => {
       await waitHandle.wait();
       await route.fulfill({ status: 500 });
     });
 
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const loadingIndicator = page.getByTestId('loading-indicator');
     await expect(loadingIndicator).toBeVisible();
@@ -81,12 +82,12 @@ test.describe('landing page', () => {
   }) => {
     const waitHandle = new WaitHandle();
 
-    await page.route(`/api/pet/kinds`, async (route) => {
+    await page.route(`${serverInfo.baseURL}/api/pet/kinds`, async (route) => {
       await waitHandle.wait();
       await route.fulfill({ status: 500 });
     });
 
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const loadingIndicator = page.getByTestId('loading-indicator');
     await expect(loadingIndicator).toBeVisible();
@@ -102,7 +103,7 @@ test.describe('modals', () => {
   test('view / edit button brings up the details modal and cancel closes it', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const petsTable = page.getByRole('table');
     const petRow = petsTable
@@ -123,7 +124,7 @@ test.describe('modals', () => {
   test('delete button brings up the delete modal and cancel closes it', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const petsTable = page.getByRole('table');
     const petRow = petsTable
@@ -144,7 +145,7 @@ test.describe('modals', () => {
   test('add buttons brings up the add modal and cancel closes it', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     await page.getByRole('button', { name: 'Add Pet' }).click();
 
@@ -164,7 +165,7 @@ test.describe('re-fresh pet list', () => {
   test('re-fetches the list of pets when a pet is deleted', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(`${serverInfo.baseURL}/`);
 
     const petsTable = page.getByRole('table');
     const petRows = petsTable.getByRole('row', { name: 'Pet', exact: true });
