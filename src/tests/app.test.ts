@@ -181,54 +181,48 @@ test.describe('re-fresh pet list', () => {
     await expect(petRows).toHaveCount(2);
   });
 
-  // test('re-fetches the list of pets when a pet is saved', async () => {
-  //   const user = userEvent.setup();
-  //
-  //   render(<App />);
-  //
-  //   const table = await screen.findByRole('table');
-  //   const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
-  //
-  //   await user.click(within(row).getByRole('button', { name: 'View / Edit' }));
-  //
-  //   const editModal = await screen.findByRole('dialog', {
-  //     name: 'View pet modal',
-  //   });
-  //
-  //   await user.click(within(editModal).getByRole('button', { name: 'Edit' }));
-  //
-  //   await waitFor(() => {
-  //     expect(
-  //       within(editModal).getByRole('heading', { name: 'Edit pet' })
-  //     ).toBeInTheDocument();
-  //   });
-  //
-  //   await user.type(within(editModal).getByLabelText('Name:'), '_new');
-  //
-  //   const onPetListEndpoint = jest.fn();
-  //   const onPetKindsEndpoint = jest.fn();
-  //
-  //   server.use(
-  //     http.get(`${BASE_URL}/pet/all`, () => {
-  //       onPetListEndpoint();
-  //       return HttpResponse.json([]);
-  //     }),
-  //     http.get(`${BASE_URL}/pet/kinds`, () => {
-  //       onPetKindsEndpoint();
-  //       return HttpResponse.json([]);
-  //     })
-  //   );
-  //
-  //   await user.click(
-  //     await within(editModal).findByRole('button', { name: 'Save' })
-  //   );
-  //
-  //   await waitFor(() => {
-  //     expect(onPetListEndpoint).toHaveBeenCalled();
-  //   });
-  //
-  //   await waitFor(() => {
-  //     expect(onPetKindsEndpoint).not.toHaveBeenCalled();
-  //   });
-  // });
+  test('re-fetches the list of pets when a pet is saved', async ({ page }) => {
+    await page.goto(`${serverInfo.baseURL}/`);
+
+    const petsTable = page.getByRole('table');
+    const petRows = petsTable.getByRole('row', { name: 'Pet', exact: true });
+
+    await petRows.first().getByRole('button', { name: 'View / Edit' }).click();
+
+    const viewModal = page.getByRole('dialog', { name: 'View pet modal' });
+    const editModal = page.getByRole('dialog', { name: 'Edit pet modal' });
+
+    await viewModal.getByRole('button', { name: 'Edit' }).click();
+
+    await expect(
+      editModal.getByRole('heading', { name: 'Edit pet' })
+    ).toBeVisible();
+
+    await editModal.getByLabel('Name:').fill('New name');
+
+    const waitHandle = new WaitHandle();
+
+    await page.route(`${serverInfo.baseURL}/api/pet/*`, async (route) => {
+      if (route.request().method() === 'PUT') {
+        await waitHandle.wait();
+      }
+
+      await route.fallback();
+    });
+
+    await editModal.getByRole('button', { name: 'Save' }).click();
+
+    const loadingIndicator = page.getByTestId('loading-indicator');
+    await expect(loadingIndicator).toBeVisible();
+    waitHandle.release();
+    await expect(loadingIndicator).toBeHidden();
+
+    await viewModal.getByRole('button', { name: 'Cancel' }).click();
+
+    await expect(petRows).toHaveCount(3);
+
+    await expect(
+      petRows.first().getByRole('cell', { name: 'New name' })
+    ).toBeVisible();
+  });
 });
